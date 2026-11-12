@@ -54,6 +54,8 @@ function SignedIn({ children }: PropsWithChildren) {
       // A new name means a new Liveblocks client and connection
       key={`${identity.browserId}:${identity.name}`}
       authEndpoint={authEndpoint}
+      // Bottom-right holds the zoom and comment controls
+      badgeLocation="bottom-left"
       // The user id is the name, so no lookup is needed
       resolveUsers={({ userIds }) => userIds.map((name) => ({ name }))}
       resolveMentionSuggestions={async ({ text }) => {

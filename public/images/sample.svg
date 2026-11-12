@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e3a5f"/></linearGradient>
+<linearGradient id="sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb923c"/><stop offset="1" stop-color="#e11d48"/></linearGradient></defs>
+<rect width="1080" height="1350" fill="url(#bg)"/>
+<line x1="0" y1="0" x2="0" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="90" y1="0" x2="90" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="180" y1="0" x2="180" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="270" y1="0" x2="270" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="360" y1="0" x2="360" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="450" y1="0" x2="450" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="540" y1="0" x2="540" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="630" y1="0" x2="630" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="720" y1="0" x2="720" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="810" y1="0" x2="810" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="900" y1="0" x2="900" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="990" y1="0" x2="990" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="1080" y1="0" x2="1080" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="0" x2="1080" y2="0" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="90" x2="1080" y2="90" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="180" x2="1080" y2="180" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="270" x2="1080" y2="270" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="360" x2="1080" y2="360" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="450" x2="1080" y2="450" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="540" x2="1080" y2="540" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="630" x2="1080" y2="630" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="720" x2="1080" y2="720" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="810" x2="1080" y2="810" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="900" x2="1080" y2="900" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="990" x2="1080" y2="990" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="1080" x2="1080" y2="1080" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="1170" x2="1080" y2="1170" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="1260" x2="1080" y2="1260" stroke="#ffffff" stroke-opacity="0.06"/>
+<line x1="0" y1="1350" x2="1080" y2="1350" stroke="#ffffff" stroke-opacity="0.06"/>
+<circle cx="540" cy="560" r="250" fill="url(#sun)"/>
+<path d="M0 900 L180 760 L330 860 L520 680 L700 840 L860 720 L1080 880 L1080 1350 L0 1350 Z" fill="#0b1220"/>
+<path d="M0 1010 L240 900 L460 990 L640 900 L860 1000 L1080 930 L1080 1350 L0 1350 Z" fill="#111c30"/>
+<text x="540" y="170" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="88" font-weight="800" fill="#fb923c">SAMPLE IMAGE</text>
+<text x="540" y="240" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="40" fill="#e2e8f0">Placeholder for the case study</text>
+<circle cx="90" cy="90" r="14" fill="none" stroke="#38bdf8" stroke-width="4"/><circle cx="90" cy="90" r="3" fill="#38bdf8"/>
+<text x="114" y="100" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#38bdf8">A</text>
+<circle cx="990" cy="90" r="14" fill="none" stroke="#38bdf8" stroke-width="4"/><circle cx="990" cy="90" r="3" fill="#38bdf8"/>
+<text x="1014" y="100" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#38bdf8">B</text>
+<circle cx="540" cy="560" r="14" fill="none" stroke="#38bdf8" stroke-width="4"/><circle cx="540" cy="560" r="3" fill="#38bdf8"/>
+<text x="564" y="570" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#38bdf8">C</text>
+<circle cx="90" cy="1260" r="14" fill="none" stroke="#38bdf8" stroke-width="4"/><circle cx="90" cy="1260" r="3" fill="#38bdf8"/>
+<text x="114" y="1270" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#38bdf8">D</text>
+<circle cx="990" cy="1260" r="14" fill="none" stroke="#38bdf8" stroke-width="4"/><circle cx="990" cy="1260" r="3" fill="#38bdf8"/>
+<text x="1014" y="1270" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#38bdf8">E</text>
+</svg>
