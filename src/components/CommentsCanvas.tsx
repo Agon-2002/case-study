@@ -1,4 +1,5 @@
 import { useThreads } from "@liveblocks/react/suspense";
+import { UserBadge } from "./identity/UserBadge";
 import { PlaceThreadButton } from "./PlaceThreadButton";
 import { ThreadPin } from "./ThreadPin";
 
@@ -11,6 +12,9 @@ export function CommentsCanvas() {
         {threads.map((thread) => (
           <ThreadPin key={thread.id} thread={thread} />
         ))}
+      </div>
+      <div className="absolute top-3 left-3">
+        <UserBadge />
       </div>
       <PlaceThreadButton />
     </div>

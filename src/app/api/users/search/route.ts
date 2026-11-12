@@ -1,29 +1,30 @@
-import { NextRequest, NextResponse } from "next/server";
-import { NAMES } from "../../../../database";
+import { Liveblocks } from "@liveblocks/node";
+import { NextResponse, type NextRequest } from "next/server";
+import { ROOM_ID } from "@/lib/config";
 
 /**
- * Returns a list of user IDs from a partial search input
- * For `resolveMentionSuggestions` in liveblocks.config.ts
+ * Mention suggestions: the names of users connected to the room right now
+ * that match the typed text.
  */
-
-interface User {
-  id: string;
-  name: string;
-}
-
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const text = searchParams.get("text");
+  const secret = process.env.LIVEBLOCKS_SECRET_KEY;
+  if (!secret) {
+    return NextResponse.json([]);
+  }
 
-  const userIndices = [...NAMES.keys()];
-  const users = userIndices.map(
-    (userIndex) => ({ id: `user-${userIndex}`, name: NAMES[userIndex] }) as User
-  );
-  const filteredUserIds = users
-    .filter((user) =>
-      text ? user.name.toLowerCase().includes(text.toLowerCase()) : true
-    )
-    .map((user) => user.id);
+  const text = (request.nextUrl.searchParams.get("text") ?? "").toLowerCase();
 
-  return NextResponse.json(filteredUserIds);
+  try {
+    const { data } = await new Liveblocks({ secret }).getActiveUsers(ROOM_ID);
+    const names = new Set(
+      data
+        .map((user) => user.id)
+        .filter((id): id is string => id !== null)
+        .filter((id) => id.toLowerCase().includes(text))
+    );
+    return NextResponse.json([...names]);
+  } catch (error) {
+    console.error("Could not load mention suggestions", error);
+    return NextResponse.json([], { status: 503 });
+  }
 }
