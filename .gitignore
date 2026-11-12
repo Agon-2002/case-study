@@ -1,3 +1,17 @@
-node_modules/
-.env.local
+# Dependencies and build output
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+
+# Environment files (never commit keys)
+.env
+.env.*
+!.env.example
+
 .DS_Store
+
+# Local planning notes
+tasks/
