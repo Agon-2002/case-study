@@ -1,29 +1,29 @@
-import { useMemo, useState } from "react";
-import { FloatingThread, CommentPin } from "@liveblocks/react-ui";
-import { ThreadData } from "@liveblocks/client";
+"use client";
+
+import type { ThreadData } from "@liveblocks/client";
+import { CommentPin, FloatingThread } from "@liveblocks/react-ui";
+import { useState } from "react";
+import { PinAnchor } from "./canvas/PinAnchor";
+
+/** How recently a thread must have been created to open on its own */
+const JUST_CREATED_MS = 1000;
 
 export function ThreadPin({ thread }: { thread: ThreadData }) {
-  // Open threads that have just been created
-  const defaultOpen = useMemo(() => {
-    return Number(new Date()) - Number(new Date(thread.createdAt)) <= 100;
-  }, [thread]);
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  // Open a thread the current user has just created
+  const [isOpen, setIsOpen] = useState(
+    () => Date.now() - new Date(thread.createdAt).getTime() <= JUST_CREATED_MS
+  );
 
   return (
-    <FloatingThread
-      thread={thread}
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      side="right"
-    >
-      <CommentPin
-        userId={thread.comments[0]?.userId}
-        corner="top-left"
-        className="absolute top-0 left-0"
-        style={{
-          transform: `translate(${thread.metadata.x}px, ${thread.metadata.y}px)`,
-        }}
-      />
-    </FloatingThread>
+    <PinAnchor point={thread.metadata}>
+      <FloatingThread
+        thread={thread}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        side="right"
+      >
+        <CommentPin userId={thread.comments[0]?.userId} corner="top-left" />
+      </FloatingThread>
+    </PinAnchor>
   );
 }

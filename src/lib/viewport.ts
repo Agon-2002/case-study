@@ -98,3 +98,10 @@ export function distance(a: Point, b: Point): number {
 export function midpoint(a: Point, b: Point): Point {
   return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
 }
+
+/** True for a stored pin position that can be drawn on the image. */
+export function isValidImagePoint(point: Point): boolean {
+  return (
+    Number.isFinite(point.x) && Number.isFinite(point.y) && isInsideImage(point)
+  );
+}

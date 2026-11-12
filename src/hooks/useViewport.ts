@@ -131,6 +131,15 @@ export function useViewport({ imageSize, onTap }: UseViewportOptions) {
     if (event.pointerType === "mouse" && event.button !== 0) {
       return;
     }
+    // Ignore presses on pins, and on threads and composers: those render in
+    // portals outside the canvas, but React still bubbles their events here
+    const target = event.target as Element;
+    if (
+      !event.currentTarget.contains(target) ||
+      target.closest("[data-canvas-pin]")
+    ) {
+      return;
+    }
     const point = toLocal(event);
     pointers.current.set(event.pointerId, point);
     try {
