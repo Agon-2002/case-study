@@ -51,6 +51,8 @@ export function useViewport({ imageSize, onTap }: UseViewportOptions) {
   const pointers = useRef(new Map<number, Point>());
   const gesture = useRef<Gesture | null>(null);
   const pinch = useRef<Pinch | null>(null);
+  // A press that ended without dragging, waiting for its click event
+  const pendingTap = useRef<Point | null>(null);
 
   const fitted =
     imageSize && containerSize
@@ -142,6 +144,7 @@ export function useViewport({ imageSize, onTap }: UseViewportOptions) {
     ) {
       return;
     }
+    pendingTap.current = null;
     const point = toLocal(event);
     pointers.current.set(event.pointerId, point);
     try {
@@ -228,7 +231,19 @@ export function useViewport({ imageSize, onTap }: UseViewportOptions) {
     gesture.current = null;
     setIsPanning(false);
     if (ended && !ended.moved && event.type === "pointerup") {
-      onTap?.(toLocal(event));
+      pendingTap.current = toLocal(event);
+    }
+  }
+
+  // The tap is reported on click, not on pointerup. On touch screens the
+  // browser fires its mouse events and click after the finger lifts; if the
+  // tap opened a composer on pointerup, that late click would land on the
+  // new pin under the finger and close it again.
+  function onClick() {
+    const point = pendingTap.current;
+    pendingTap.current = null;
+    if (point) {
+      onTap?.(point);
     }
   }
 
@@ -257,6 +272,7 @@ export function useViewport({ imageSize, onTap }: UseViewportOptions) {
       onPointerMove,
       onPointerUp: onPointerEnd,
       onPointerCancel: onPointerEnd,
+      onClick,
     },
     zoomIn: () => zoomBy(ZOOM_STEP),
     zoomOut: () => zoomBy(1 / ZOOM_STEP),
