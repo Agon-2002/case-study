@@ -75,8 +75,12 @@ function PinWithThread({
         side={sideFor(point)}
         // Keep the thread mounted but hidden while its pin is off screen
         className={cn(!isOnScreen(point) && "invisible")}
-        // Attachments aren't part of the brief or the design reference
+        // Hidden because the app has no use for them: attachments aren't in
+        // the brief or design, subscriptions only feed a notifications inbox
+        // this app doesn't have, and resolved threads look the same as open
         showAttachments={false}
+        showSubscription={false}
+        showResolveAction={false}
       >
         <CommentPin
           userId={thread.comments[0]?.userId}

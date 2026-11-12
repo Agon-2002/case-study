@@ -133,7 +133,7 @@ src/
 - **On phones, threads open below the pin.** On a screen narrower than a thread plus its pin (420px), no pin has room for a thread beside it on either side, so the thread opens below and slides sideways to stay fully visible. The left/right rule applies everywhere else.
 - **Names identify people; they don't authenticate them.** A name can't be used by two browsers at the same time, but once someone leaves, the next person to type their name becomes them and can edit their comments. A real app would use a login provider.
 - **One image and one room.** The image is a placeholder SVG drawn for this project (`public/images/sample.svg`), with a grid and labelled points that make any drift easy to spot.
-- **Attachments are hidden.** They aren't in the brief or the design reference.
+- **Attachments, thread subscriptions and resolving are hidden.** Attachments aren't in the brief or the design reference. Subscribing only feeds a notifications inbox this app doesn't have, and a resolved thread would look the same as an open one, so both buttons did nothing visible.
 - **Clicking the zoom buttons closes an open thread**, because Liveblocks treats it as a click outside. Wheel and pinch zoom keep it open.
 - **A comment that fails to save loses its text.** Liveblocks rolls the comment back and the toast says so, but the draft isn't restored.
 
