@@ -45,8 +45,13 @@ export function DraftPin({ point, onCreated, onCancel }: DraftPinProps) {
         }}
         side={sideFor(point)}
         className={cn(!isOnScreen(point) && "invisible")}
+        showAttachments={false}
       >
-        <CommentPin userId={userId} corner="top-left" />
+        <CommentPin
+          userId={userId}
+          corner="top-left"
+          aria-label="New comment"
+        />
       </FloatingComposer>
     </PinAnchor>
   );

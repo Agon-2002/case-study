@@ -75,8 +75,15 @@ function PinWithThread({
         side={sideFor(point)}
         // Keep the thread mounted but hidden while its pin is off screen
         className={cn(!isOnScreen(point) && "invisible")}
+        // Attachments aren't part of the brief or the design reference
+        showAttachments={false}
       >
-        <CommentPin userId={thread.comments[0]?.userId} corner="top-left" />
+        <CommentPin
+          userId={thread.comments[0]?.userId}
+          corner="top-left"
+          // The user id is the author's name
+          aria-label={`Comment by ${thread.comments[0]?.userId ?? "unknown"}`}
+        />
       </FloatingThread>
     </PinAnchor>
   );
