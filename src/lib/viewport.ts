@@ -22,6 +22,10 @@ export const MAX_SCALE = 8;
 export const ZOOM_STEP = 1.25;
 /** Space left around the image when it is fitted to the screen, in px */
 export const FIT_PADDING = 48;
+/** The same space on phone-sized screens, where every pixel counts */
+export const FIT_PADDING_SMALL = 16;
+/** Canvas width below which the smaller fit padding applies, in px */
+const SMALL_SCREEN_WIDTH = 640;
 /** Pointer movement in px below which a press still counts as a click */
 export const DRAG_THRESHOLD = 4;
 
@@ -53,8 +57,10 @@ export function panBy(viewport: Viewport, dx: number, dy: number): Viewport {
 
 /** Scale and centre the image so all of it shows, at most at 100%. */
 export function fitToContainer(image: Size, container: Size): Viewport {
-  const availableWidth = Math.max(container.width - FIT_PADDING * 2, 1);
-  const availableHeight = Math.max(container.height - FIT_PADDING * 2, 1);
+  const padding =
+    container.width < SMALL_SCREEN_WIDTH ? FIT_PADDING_SMALL : FIT_PADDING;
+  const availableWidth = Math.max(container.width - padding * 2, 1);
+  const availableHeight = Math.max(container.height - padding * 2, 1);
   const scale = clampScale(
     Math.min(availableWidth / image.width, availableHeight / image.height, 1)
   );

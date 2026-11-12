@@ -8,10 +8,7 @@ import {
   type Size,
   type Viewport,
 } from "@/lib/viewport";
-import { THREAD_WIDTH, getThreadSide } from "@/lib/thread-placement";
-
-/** Room kept beside a thread on narrow screens: pin, gap and margins, in px */
-const NARROW_SCREEN_MARGIN = 88;
+import { getThreadSide } from "@/lib/thread-placement";
 
 export type CanvasGeometry = {
   viewport: Viewport;
@@ -24,11 +21,6 @@ export type CanvasGeometry = {
 /** What pins need to know about the canvas: positions, sides, visibility. */
 export function createCanvasHelpers(geometry: CanvasGeometry) {
   const { viewport, imageSize, containerSize, clientToLocal } = geometry;
-  const threadWidth = Math.min(
-    THREAD_WIDTH,
-    containerSize.width - NARROW_SCREEN_MARGIN
-  );
-
   return {
     /** A page (client) point as a normalised image point */
     clientToImage(client: Point): Point {
@@ -39,7 +31,7 @@ export function createCanvasHelpers(geometry: CanvasGeometry) {
         anchorX: point.x,
         imageWidth: imageSize.width,
         scale: viewport.scale,
-        threadWidth,
+        screenWidth: containerSize.width,
       });
     },
     /** False while the pin is panned out of the canvas */

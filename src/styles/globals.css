@@ -83,13 +83,14 @@
 }
 
 /*
- * Threads and composers shrink on narrow screens and never grow taller than
- * the space Radix reports on screen; long threads scroll inside.
+ * Threads and composers never grow taller than the space Radix reports on
+ * screen; long threads scroll inside. On phones they open below the pin and
+ * shrink to the screen width minus a 16px margin on each side.
  */
 .lb-floating-thread,
 .lb-floating-composer {
-  --lb-floating-thread-size: min(350px, calc(100vw - 88px));
-  --lb-floating-composer-size: min(350px, calc(100vw - 88px));
+  --lb-floating-thread-size: min(350px, calc(100vw - 32px));
+  --lb-floating-composer-size: min(350px, calc(100vw - 32px));
   max-block-size: var(--radix-popover-content-available-height);
   overflow-y: auto;
 }
