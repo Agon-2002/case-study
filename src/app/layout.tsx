@@ -1,6 +1,25 @@
 import "../styles/globals.css";
+import type { Metadata, Viewport } from "next";
+import { Geist } from "next/font/google";
 import { Suspense } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { Providers } from "./Providers";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+
+export const metadata: Metadata = {
+  title: "Image Comments",
+  robots: { index: false },
+};
+
+// The canvas handles pinch zoom itself, so the browser must not zoom the page.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  userScalable: false,
+};
 
 export default function RootLayout({
   children,
@@ -8,28 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <title>Liveblocks</title>
-        <meta name="robots" content="noindex" />
-        <meta name="viewport" content="width=device-width, user-scalable=no" />
-        <link
-          href="https://liveblocks.io/favicon-32x32.png"
-          rel="icon"
-          sizes="32x32"
-          type="image/png"
-        />
-        <link
-          href="https://liveblocks.io/favicon-16x16.png"
-          rel="icon"
-          sizes="16x16"
-          type="image/png"
-        />
-      </head>
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>
-        <Providers>
-          <Suspense>{children}</Suspense>
-        </Providers>
+        <TooltipProvider>
+          <Providers>
+            <Suspense>{children}</Suspense>
+          </Providers>
+        </TooltipProvider>
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );
