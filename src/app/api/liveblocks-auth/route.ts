@@ -1,20 +1,20 @@
 import { Liveblocks } from "@liveblocks/node";
 import { NAMES } from "../../../database";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 /**
  * Authenticating your Liveblocks application
  * https://liveblocks.io/docs/api-reference/authentication
  */
 
-const liveblocks = new Liveblocks({
-  secret: process.env.LIVEBLOCKS_SECRET_KEY!,
-});
-
-export async function POST(request: NextRequest) {
-  if (!process.env.LIVEBLOCKS_SECRET_KEY) {
+export async function POST() {
+  const secret = process.env.LIVEBLOCKS_SECRET_KEY;
+  if (!secret) {
     return new NextResponse("Missing LIVEBLOCKS_SECRET_KEY", { status: 403 });
   }
+
+  // Created per request so the build does not need the secret key
+  const liveblocks = new Liveblocks({ secret });
 
   // Get the current user's unique id from your database
   const userIndex = Math.floor(Math.random() * NAMES.length);
