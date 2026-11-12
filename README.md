@@ -6,10 +6,11 @@ Thank you for taking part in our hiring process. This case study is the second s
 
 # Rules
 
-1. **Write the code yourself.** Please do not use AI coding assistants (Copilot, Cursor, Claude, ChatGPT and similar) to write your solution. We want to see your own code, structure and thinking.
-2. **You will explain it live.** If you move to the next stage, you will walk the team through your code and explain your decisions. Only submit code you can fully explain.
-3. **Commit in small steps.** Make regular commits with clear messages as you work. Your commit history helps us see your process and which parts you built yourself.
-4. **Partial is fine.** Focus on doing the core features well. A clean, working subset beats a rushed, complete one.
+1. **AI tools are allowed.** You may use any AI coding tools you like (Copilot, Cursor, Claude, ChatGPT and similar). The team you would join uses AI every day. What matters is that the result is good and that you understand it.
+2. **You will explain it live.** If you move to the next stage, you will walk the team through your code and explain your decisions, line by line if asked. Only submit code you can fully explain, whoever or whatever wrote it.
+3. **Add an AI usage note.** In your README, add a short section called "AI usage" covering: which tools you used, what you used them for, and at least one thing the AI got wrong or that you changed, and why.
+4. **Commit in small steps.** Make regular commits with clear messages as you work. Your commit history helps us see your process.
+5. **Partial is fine.** Focus on doing the core features well. A clean, working subset beats a rushed, complete one.
 
 # Part B: Image Commenting App (Required)
 
@@ -56,6 +57,8 @@ Use these as a guide. Working functionality matters more than matching the desig
 You may improve the design or add libraries if they help usability. Any icon library is fine.
 
 ## How we evaluate
+
+Since AI tools are allowed, we care most about the quality of your decisions: how the code is structured, how you solved the hard parts (comments staying anchored through zoom and pan, the left and right flip), how you handle errors, and how well you can explain all of it.
 
 * **Functionality:** does the app work as expected?
 * **Code quality:** is the code organised, clean, maintainable and testable?
