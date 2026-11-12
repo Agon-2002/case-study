@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { CommentPin, FloatingComposer } from "@liveblocks/react-ui";
 import { useSelf } from "@liveblocks/react";
-import { useMaxZIndex } from "../hooks";
 
 export function PlaceThreadButton() {
   const [state, setState] = useState<"initial" | "placing" | "placed">(
@@ -95,8 +94,6 @@ function ThreadComposer({
 }) {
   // Get the current user
   const creatorId = useSelf((me) => me.id);
-  // Create thread above other threads
-  const maxZIndex = useMaxZIndex();
 
   return (
     <FloatingComposer
@@ -104,7 +101,6 @@ function ThreadComposer({
       metadata={{
         x: coords.x,
         y: coords.y,
-        zIndex: maxZIndex + 1,
       }}
       onComposerSubmit={onSubmit}
     >

@@ -1,5 +1,6 @@
 import { Liveblocks } from "@liveblocks/node";
 import { NAMES } from "../../../database";
+import { ROOM_ID } from "@/lib/config";
 import { NextResponse } from "next/server";
 
 /**
@@ -27,8 +28,7 @@ export async function POST() {
     },
   });
 
-  // Use a naming pattern to allow access to rooms with a wildcard
-  session.allow(`liveblocks:examples:*`, ["*:write"]);
+  session.allow(ROOM_ID, session.FULL_ACCESS);
 
   // Authorize the user and return the result
   const { status, body } = await session.authorize();
