@@ -81,3 +81,15 @@
     @apply bg-canvas text-foreground font-sans antialiased;
   }
 }
+
+/*
+ * Threads and composers shrink on narrow screens and never grow taller than
+ * the space Radix reports on screen; long threads scroll inside.
+ */
+.lb-floating-thread,
+.lb-floating-composer {
+  --lb-floating-thread-size: min(350px, calc(100vw - 88px));
+  --lb-floating-composer-size: min(350px, calc(100vw - 88px));
+  max-block-size: var(--radix-popover-content-available-height);
+  overflow-y: auto;
+}

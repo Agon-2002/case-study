@@ -1,5 +1,8 @@
-import type { PropsWithChildren } from "react";
+import type { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 import type { Point } from "@/lib/viewport";
+
+type PinAnchorProps = HTMLAttributes<HTMLDivElement> & { point: Point };
 
 /**
  * Places its children at a normalised image point inside the moving layer.
@@ -11,18 +14,23 @@ import type { Point } from "@/lib/viewport";
  */
 export function PinAnchor({
   point,
+  className,
+  style,
   children,
-}: PropsWithChildren<{ point: Point }>) {
+  ...props
+}: PinAnchorProps) {
   return (
     <div
       // Pins handle their own pointer events, so the canvas must not pan
       data-canvas-pin
-      className="absolute origin-top-left"
+      className={cn("absolute origin-top-left", className)}
       style={{
+        ...style,
         left: `${point.x * 100}%`,
         top: `${point.y * 100}%`,
         transform: "scale(calc(1 / var(--viewport-scale, 1)))",
       }}
+      {...props}
     >
       {children}
     </div>

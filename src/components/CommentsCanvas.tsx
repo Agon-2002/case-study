@@ -1,15 +1,8 @@
 "use client";
 
 import { useThreads } from "@liveblocks/react/suspense";
-import { MessageCirclePlusIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState, type CSSProperties } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useViewport } from "@/hooks/useViewport";
 import { resolveImageUrl, withRetryParam } from "@/lib/image-source";
 import { cn } from "@/lib/utils";
@@ -24,11 +17,12 @@ import {
   ImageStatusOverlay,
   type ImageState,
 } from "./canvas/CanvasImage";
+import { CanvasProvider, createCanvasHelpers } from "./canvas/CanvasContext";
+import { CanvasToolbar } from "./CanvasToolbar";
 import { DraftPin } from "./DraftPin";
 import { UserBadge } from "./identity/UserBadge";
 import { PlacementOverlay } from "./PlacementOverlay";
 import { ThreadPin } from "./ThreadPin";
-import { ZoomControls } from "./ZoomControls";
 
 export function CommentsCanvas() {
   const { threads } = useThreads();
@@ -37,38 +31,72 @@ export function CommentsCanvas() {
   const [attempt, setAttempt] = useState(0);
   const [isPlacing, setIsPlacing] = useState(false);
   const [draft, setDraft] = useState<Point | null>(null);
+  const [openThreadId, setOpenThreadId] = useState<string | null>(null);
+  // Whether a thread or composer was open when the current press started.
+  // That press only closes it, it does not start a new comment.
+  const pressClosesPopup = useRef(false);
 
   const imageSize = image.status === "loaded" ? image.size : null;
   const {
     containerRef,
+    containerSize,
+    clientToLocal,
     viewport,
     isPanning,
     pointerHandlers,
     zoomIn,
     zoomOut,
     resetView,
-  } = useViewport({ imageSize });
+  } = useViewport({ imageSize, onTap: (point) => onTap(point) });
 
-  function retryImage() {
-    setImage({ status: "loading" });
-    setAttempt((count) => count + 1);
+  const canvas =
+    viewport && imageSize && containerSize
+      ? createCanvasHelpers({
+          viewport,
+          imageSize,
+          containerSize,
+          clientToLocal,
+        })
+      : null;
+
+  // A click on the image (not a drag) starts a comment there, unless the
+  // press was spent closing an open thread or composer
+  function onTap(screenPoint: Point) {
+    if (!pressClosesPopup.current) {
+      placeDraft(screenPoint);
+    }
   }
 
-  function placeComment(clientPoint: Point) {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect || !viewport || !imageSize) {
+  function placeDraft(screenPoint: Point) {
+    if (!viewport || !imageSize) {
       return;
     }
-    const point = screenToImage(viewport, imageSize, {
-      x: clientPoint.x - rect.left,
-      y: clientPoint.y - rect.top,
-    });
+    const point = screenToImage(viewport, imageSize, screenPoint);
     // Comments belong to the image, so clicks beside it do nothing
     if (!isInsideImage(point)) {
       return;
     }
     setIsPlacing(false);
+    setOpenThreadId(null);
     setDraft(point);
+  }
+
+  useEffect(() => {
+    if (!isPlacing) {
+      return;
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsPlacing(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isPlacing]);
+
+  function retryImage() {
+    setImage({ status: "loading" });
+    setAttempt((count) => count + 1);
   }
 
   // One transform moves the image and everything anchored to it. The scale
@@ -89,8 +117,11 @@ export function CommentsCanvas() {
         ref={containerRef}
         className={cn(
           "absolute inset-0 touch-none overflow-hidden select-none",
-          isPanning ? "cursor-grabbing" : "cursor-grab"
+          isPanning ? "cursor-grabbing" : "cursor-default"
         )}
+        onPointerDownCapture={() => {
+          pressClosesPopup.current = openThreadId !== null || draft !== null;
+        }}
         {...pointerHandlers}
       >
         <div
@@ -103,26 +134,42 @@ export function CommentsCanvas() {
             onLoad={(size) => setImage({ status: "loaded", size })}
             onError={() => setImage({ status: "error" })}
           />
-          {imageSize ? (
-            <div className="absolute inset-0">
-              {threads
-                .filter((thread) => isValidImagePoint(thread.metadata))
-                .map((thread) => (
-                  <ThreadPin key={thread.id} thread={thread} />
-                ))}
-              {draft ? (
-                <DraftPin point={draft} onDone={() => setDraft(null)} />
-              ) : null}
-            </div>
+          {canvas ? (
+            <CanvasProvider value={canvas}>
+              <div className="absolute inset-0">
+                {threads
+                  .filter((thread) => isValidImagePoint(thread.metadata))
+                  .map((thread) => (
+                    <ThreadPin
+                      key={thread.id}
+                      thread={thread}
+                      isOpen={openThreadId === thread.id}
+                      onOpenChange={(open) =>
+                        setOpenThreadId(open ? thread.id : null)
+                      }
+                    />
+                  ))}
+                {draft ? (
+                  <DraftPin
+                    point={draft}
+                    onCreated={(threadId) => {
+                      setDraft(null);
+                      setOpenThreadId(threadId);
+                    }}
+                    onCancel={() => setDraft(null)}
+                  />
+                ) : null}
+              </div>
+            </CanvasProvider>
           ) : null}
         </div>
       </div>
 
       <ImageStatusOverlay state={image} onRetry={retryImage} />
 
-      {isPlacing ? (
+      {isPlacing && canvas ? (
         <PlacementOverlay
-          onPlace={placeComment}
+          onPlace={(client) => placeDraft(clientToLocal(client))}
           onCancel={() => setIsPlacing(false)}
         />
       ) : null}
@@ -130,29 +177,16 @@ export function CommentsCanvas() {
       <div className="absolute top-3 left-3">
         <UserBadge />
       </div>
-      <div className="absolute right-3 bottom-3 flex items-center gap-2">
-        <ZoomControls
+      <div className="absolute right-3 bottom-3">
+        <CanvasToolbar
           scale={viewport?.scale ?? null}
+          isPlacing={isPlacing}
+          canComment={canvas !== null}
+          onTogglePlacing={() => setIsPlacing((placing) => !placing)}
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onReset={resetView}
         />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="icon-lg"
-              variant={isPlacing ? "default" : "outline"}
-              className="shadow-sm"
-              onClick={() => setIsPlacing((placing) => !placing)}
-              disabled={!imageSize}
-              aria-pressed={isPlacing}
-              aria-label="Add a comment"
-            >
-              <MessageCirclePlusIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Add a comment</TooltipContent>
-        </Tooltip>
       </div>
     </div>
   );

@@ -114,12 +114,14 @@ export function useViewport({ imageSize, onTap }: UseViewportOptions) {
     return () => element.removeEventListener("wheel", listener);
   }, []);
 
-  function toLocal(event: { clientX: number; clientY: number }): Point {
+  /** A page (client) point relative to the canvas, read at event time */
+  const clientToLocal = useCallback((client: Point): Point => {
     const rect = containerRef.current?.getBoundingClientRect();
-    return {
-      x: event.clientX - (rect?.left ?? 0),
-      y: event.clientY - (rect?.top ?? 0),
-    };
+    return { x: client.x - (rect?.left ?? 0), y: client.y - (rect?.top ?? 0) };
+  }, []);
+
+  function toLocal(event: { clientX: number; clientY: number }): Point {
+    return clientToLocal({ x: event.clientX, y: event.clientY });
   }
 
   function currentPinch(): Pinch | null {
@@ -246,6 +248,8 @@ export function useViewport({ imageSize, onTap }: UseViewportOptions) {
 
   return {
     containerRef,
+    containerSize,
+    clientToLocal,
     viewport,
     isPanning,
     pointerHandlers: {

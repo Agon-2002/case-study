@@ -1,26 +1,80 @@
 "use client";
 
 import type { ThreadData } from "@liveblocks/client";
+import { useEditThreadMetadata, useSelf } from "@liveblocks/react/suspense";
 import { CommentPin, FloatingThread } from "@liveblocks/react-ui";
-import { useState } from "react";
+import { usePinDrag } from "@/hooks/usePinDrag";
+import { cn } from "@/lib/utils";
+import type { Point } from "@/lib/viewport";
+import { useCanvas } from "./canvas/CanvasContext";
 import { PinAnchor } from "./canvas/PinAnchor";
 
-/** How recently a thread must have been created to open on its own */
-const JUST_CREATED_MS = 1000;
+type ThreadPinProps = {
+  thread: ThreadData;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+};
 
-export function ThreadPin({ thread }: { thread: ThreadData }) {
-  // Open a thread the current user has just created
-  const [isOpen, setIsOpen] = useState(
-    () => Date.now() - new Date(thread.createdAt).getTime() <= JUST_CREATED_MS
+export function ThreadPin({ thread, isOpen, onOpenChange }: ThreadPinProps) {
+  const authorId = thread.comments[0]?.userId;
+  const isAuthor = useSelf((me) => me.id === authorId);
+
+  return isAuthor ? (
+    <MovablePin thread={thread} isOpen={isOpen} onOpenChange={onOpenChange} />
+  ) : (
+    <PinWithThread
+      thread={thread}
+      point={thread.metadata}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+    />
+  );
+}
+
+/** The author's pin, which can be dragged to a new spot. */
+function MovablePin({ thread, isOpen, onOpenChange }: ThreadPinProps) {
+  const editThreadMetadata = useEditThreadMetadata();
+  const { point, isDragging, dragHandlers } = usePinDrag(
+    thread.metadata,
+    (next) => editThreadMetadata({ threadId: thread.id, metadata: next })
   );
 
   return (
-    <PinAnchor point={thread.metadata}>
+    <PinWithThread
+      thread={thread}
+      point={point}
+      isOpen={isOpen && !isDragging}
+      onOpenChange={onOpenChange}
+      className={isDragging ? "cursor-grabbing" : "cursor-grab"}
+      {...dragHandlers}
+    />
+  );
+}
+
+type PinWithThreadProps = Omit<ThreadPinProps, "isOpen"> &
+  React.HTMLAttributes<HTMLDivElement> & {
+    point: Point;
+    isOpen: boolean;
+  };
+
+function PinWithThread({
+  thread,
+  point,
+  isOpen,
+  onOpenChange,
+  ...anchorProps
+}: PinWithThreadProps) {
+  const { sideFor, isOnScreen } = useCanvas();
+
+  return (
+    <PinAnchor point={point} {...anchorProps}>
       <FloatingThread
         thread={thread}
         open={isOpen}
-        onOpenChange={setIsOpen}
-        side="right"
+        onOpenChange={onOpenChange}
+        side={sideFor(point)}
+        // Keep the thread mounted but hidden while its pin is off screen
+        className={cn(!isOnScreen(point) && "invisible")}
       >
         <CommentPin userId={thread.comments[0]?.userId} corner="top-left" />
       </FloatingThread>
