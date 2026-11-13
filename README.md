@@ -42,9 +42,9 @@ If the key is missing, the app shows a setup screen that says what to add.
 
 ### Trying the error states
 
-- **Image that doesn't load:** open `http://localhost:3000/?image=/missing.png`. The `image` parameter accepts any http(s) URL or path on the site.
-- **Lost connection:** turn your network off for a few seconds. A banner appears after Liveblocks' grace period and clears when you're back.
-- **Name in use:** sign in with the same name in two different browsers.
+- **Image that doesn't load.** Open `http://localhost:3000/?image=/missing.png`. The `image` parameter accepts any http(s) URL or path on the site.
+- **Lost connection.** Turn your network off for a few seconds. A banner appears after Liveblocks' grace period and clears when you're back.
+- **Name in use.** Sign in with the same name in two different browsers.
 
 ## How it works
 
@@ -52,15 +52,15 @@ If the key is missing, the app shows a setup screen that says what to add.
 
 The hard part of the brief is keeping each comment on its spot at every zoom level. Three choices solve it:
 
-1. **Pins are stored as fractions of the image**, from 0 to 1 (`{ x: 0.42, y: 0.17 }` in the thread's metadata). Zoom, pan and screen size never change a stored position, and two people with different window sizes see the pin on the same pixel.
+1. **The app stores pins as fractions of the image**, from 0 to 1 (`{ x: 0.42, y: 0.17 }` in the thread's metadata). Zoom, pan and screen size never change a stored position, and two people with different window sizes see the pin on the same pixel.
 2. **One transform moves everything.** The image sits at its natural size in a single layer moved by `translate(x, y) scale(s)`. Pins live inside that layer at `left: x * 100%; top: y * 100%`, so the browser applies the exact same transform to the image and the pins. They can't drift apart.
 3. **Pins undo the scale** with `scale(calc(1 / var(--viewport-scale)))` around their top-left corner, which is the anchor point. They stay 32px on screen at any zoom.
 
-The maths lives in pure functions in [`src/lib/viewport.ts`](src/lib/viewport.ts), with tests: converting between screen and image points, zooming around a point so it stays under the cursor, and fitting the image to the screen.
+The maths lives in pure, tested functions in [`src/lib/viewport.ts`](src/lib/viewport.ts). They convert between screen and image points, zoom around a point so it stays under the cursor, and fit the image to the screen.
 
 ### Pan and zoom
 
-[`useViewport`](src/hooks/useViewport.ts) holds `{ x, y, scale }`. Until the user moves the view, it stays fitted to the window, including after a resize. There is no library: pointer events cover mouse, touch and pen.
+[`useViewport`](src/hooks/useViewport.ts) holds `{ x, y, scale }`. Until the user moves the view, it stays fitted to the window, including after a resize. It uses no library. Pointer events cover mouse, touch and pen.
 
 - A press that moves more than 4px pans; anything shorter is a click.
 - Ctrl/⌘ + wheel and trackpad pinch zoom around the cursor; a plain wheel or two-finger scroll pans.
@@ -69,9 +69,9 @@ The maths lives in pure functions in [`src/lib/viewport.ts`](src/lib/viewport.ts
 
 ### Left and right flip
 
-[`getThreadSide`](src/lib/thread-placement.ts) follows the brief: a thread opens to the right of its pin, and flips to open inwards when the pin is too close to the image's right edge. "Too close" means less room on screen than the pin, gap and thread need (388px). Because the distance is measured on screen, zooming in gives an edge pin room again, and panning never changes the side.
+[`getThreadSide`](src/lib/thread-placement.ts) follows the brief. A thread opens to the right of its pin, and flips to open inwards when the pin is too close to the image's right edge. "Too close" means less room on screen than the pin, gap and thread need (388px). Because it measures the distance on screen, zooming in gives an edge pin room again, and panning never changes the side.
 
-Up and down are left to the popover (Radix, inside Liveblocks), which shifts a thread to stay on screen and caps its height to the space available; long threads scroll inside.
+The popover (Radix, inside Liveblocks) handles up and down. It shifts a thread to stay on screen and caps its height to the space available, and long threads scroll inside.
 
 ### Comments
 
@@ -87,7 +87,7 @@ Up and down are left to the popover (Radix, inside Liveblocks), which shifts a t
 There is no password. Users type a name, which becomes their Liveblocks user id, and the app keeps it in `localStorage` with a random browser id.
 
 - The auth route ([`route.ts`](src/app/api/liveblocks-auth/route.ts)) validates the request with Zod and refuses a name, in any letter case, that another browser has connected to the room right now. A reload, a second tab or a reconnect from the same browser gets through.
-- Two sign-ins at the same moment can both pass that check, so [`DuplicateNameGuard`](src/components/identity/DuplicateNameGuard.tsx) checks again after connecting: Liveblocks numbers connections in order, and the later one leaves.
+- Two sign-ins at the same moment can both pass that check, so [`DuplicateNameGuard`](src/components/identity/DuplicateNameGuard.tsx) checks again after connecting. Liveblocks numbers connections in order, and the later one leaves.
 
 ### State
 
@@ -98,7 +98,7 @@ There is no password. Users type a name, which becomes their Liveblocks user id,
 | Open thread, draft comment, placement mode | React state in `CommentsCanvas`                             |
 | Name and browser id                        | `localStorage`, read with `useSyncExternalStore`            |
 
-Comments are never copied into a second store, so real-time updates from other users have one place to land.
+The app never copies comments into a second store, so updates from other users only change one place.
 
 ### Errors
 
@@ -154,7 +154,7 @@ I used **Claude Code** (Claude Opus) throughout Part B. I used it to:
 
 Things it got wrong, and what I changed:
 
-- **The flip rule.** It offered a screen-edge rule for the left/right flip, and I first agreed. The brief clearly says the image's right edge, so I corrected it, and the rule now follows the brief.
+- **The flip rule.** It offered a screen-edge rule for the left/right flip, and I first agreed. The brief says the image's right edge, so I corrected it, and the rule now follows the brief.
 - **Identity.** Its first proposal used the name as the user id with no check for names in use, which would let two people with the same name edit each other's comments at the same time. I pushed back, and we added the server check plus the after-connect check.
 - **React Query.** It first suggested React Query for the sign-in call. There was nothing for it to do: Liveblocks calls the auth route itself and already caches comments, so I left it out.
 
