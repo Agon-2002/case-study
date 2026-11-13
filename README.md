@@ -156,7 +156,7 @@ Things it got wrong, and what I changed:
 
 - **The flip rule.** It offered a screen-edge rule for the left/right flip. The brief says the image's right edge, so I corrected it, and the rule now follows the brief.
 - **Identity.** Its first proposal used the name as the user id with no check for names in use, which would let two people with the same name edit each other's comments at the same time. I pushed back, and we added the server check plus the after-connect check.
-- **Reaching users in Part A.** For learning more while the customer is away, it suggested talking to the customer's users directly. With the customer unavailable we'd have no way to reach their users, so I left it out.
+- **Reaching users in Part A.** For learning more while the customer is away, it suggested talking to the customer's users directly. That was an overreach for this task, so I left it out.
 
 ---
 
