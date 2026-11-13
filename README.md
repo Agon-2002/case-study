@@ -143,8 +143,6 @@ The unit tests cover the two parts the brief names as hard: anchoring (screen an
 
 ## AI usage
 
-> **Draft: rewrite this in your own words before submitting.** The brief asks for your account of how you used AI, and you'll be asked about it live.
-
 I used **Claude Code** (Claude Opus) throughout Part B. I used it to:
 
 - question me about the design before writing code, one decision at a time (coordinates, pan/zoom, click behaviour, the flip, identity, errors, styling, tests)
@@ -154,9 +152,8 @@ I used **Claude Code** (Claude Opus) throughout Part B. I used it to:
 
 Things it got wrong, and what I changed:
 
-- **The flip rule.** It offered a screen-edge rule for the left/right flip, and I first agreed. The brief says the image's right edge, so I corrected it, and the rule now follows the brief.
+- **The flip rule.** It offered a screen-edge rule for the left/right flip. The brief says the image's right edge, so I corrected it, and the rule now follows the brief.
 - **Identity.** Its first proposal used the name as the user id with no check for names in use, which would let two people with the same name edit each other's comments at the same time. I pushed back, and we added the server check plus the after-connect check.
-- **React Query.** It first suggested React Query for the sign-in call. There was nothing for it to do: Liveblocks calls the auth route itself and already caches comments, so I left it out.
 
 ---
 
