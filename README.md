@@ -150,6 +150,8 @@ I used **Claude Code** (Claude Opus) throughout Part B. I used it to:
 - write the code in small steps and test each step in a browser, including the failure cases
 - draft this README
 
+For Part A I wrote the questions, research ideas and ticket decisions myself. I used Claude Code to give the answers a clear structure and make the wording more professional.
+
 Things it got wrong, and what I changed:
 
 - **The flip rule.** It offered a screen-edge rule for the left/right flip. The brief says the image's right edge, so I corrected it, and the rule now follows the brief.
