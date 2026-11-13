@@ -9,14 +9,18 @@ import {
 import { NameScreen } from "@/components/identity/NameScreen";
 import { SetupScreen } from "@/components/identity/SetupScreen";
 import { Loading } from "@/components/Loading";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { requestLiveblocksToken } from "@/lib/auth-client";
 import { AUTH_ERROR } from "@/lib/identity";
 
+/** Every app-wide provider, so the layout has one place to wrap. */
 export function Providers({ children }: PropsWithChildren) {
   return (
-    <IdentityProvider>
-      <SignedIn>{children}</SignedIn>
-    </IdentityProvider>
+    <TooltipProvider>
+      <IdentityProvider>
+        <SignedIn>{children}</SignedIn>
+      </IdentityProvider>
+    </TooltipProvider>
   );
 }
 

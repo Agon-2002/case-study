@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Providers } from "./Providers";
 
@@ -14,6 +13,7 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
+// Next.js reads this export and renders the viewport meta tag from it.
 // The canvas handles pinch zoom itself, so the browser must not zoom the page.
 export const viewport: Viewport = {
   width: "device-width",
@@ -29,11 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>
-        <TooltipProvider>
-          <Providers>
-            <Suspense>{children}</Suspense>
-          </Providers>
-        </TooltipProvider>
+        <Providers>
+          <Suspense>{children}</Suspense>
+        </Providers>
         <Toaster position="bottom-center" />
       </body>
     </html>
