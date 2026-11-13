@@ -1,7 +1,6 @@
 import "../styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
-import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { Providers } from "./Providers";
@@ -29,9 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>
-        <Providers>
-          <Suspense>{children}</Suspense>
-        </Providers>
+        <Providers>{children}</Providers>
         <Toaster position="bottom-center" />
       </body>
     </html>

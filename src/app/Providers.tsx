@@ -1,7 +1,7 @@
 "use client";
 
 import { LiveblocksProvider } from "@liveblocks/react";
-import { Suspense, useCallback, type PropsWithChildren } from "react";
+import { useCallback, type PropsWithChildren } from "react";
 import {
   IdentityProvider,
   useIdentity,
@@ -72,7 +72,7 @@ function SignedIn({ children }: PropsWithChildren) {
         return (await response.json()) as string[];
       }}
     >
-      <Suspense>{children}</Suspense>
+      {children}
     </LiveblocksProvider>
   );
 }
